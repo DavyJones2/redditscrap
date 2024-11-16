@@ -7,22 +7,18 @@ from langdetect import detect, LangDetectException
 import re
 import openai
 import time
-from dotenv import load_dotenv
-import os 
-
-load_dotenv()
 
 # Configure Reddit API credentials
 reddit = praw.Reddit(
-    client_id=os.getenv('REDDIT_CLIENT_ID'),
-    client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
+    client_id="SZX2vaErb1CbJ58vllm8gQ",
+    client_secret="zG3cG-G-Nq-LZvipTQF431QzPDw74w",
     user_agent='your_user_agent'
 )
 
 subreddit = reddit.subreddit("all")
 
 # OpenAI API key configuration
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = "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"
 
 # Define the FastAPI app
 app = FastAPI()
