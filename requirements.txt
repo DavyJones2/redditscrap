@@ -1,0 +1,8 @@
+dotenv==0.0.5
+fastapi==0.115.5
+langdetect==1.0.9
+openai==0.28.0
+praw==7.8.1
+pydantic==2.9.2
+python-dotenv==1.0.1
+gunicorn == 20.1.0
