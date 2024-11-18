@@ -89,7 +89,7 @@ def general(user_input):
     global  list1 
     global  posts 
     n = 0
-    batch_size = 10  # Define the batch size to control the number of requests per batch
+    batch_size = 5  # Define the batch size to control the number of requests per batch
     delay = 60       # Initial delay in seconds after a rate limit error
     retry_attempts = 3  # Maximum retry attempts for each post
 
