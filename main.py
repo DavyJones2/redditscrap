@@ -90,7 +90,7 @@ def general(user_input):
     global  posts 
     n = 0
     batch_size = 5  # Define the batch size to control the number of requests per batch
-    delay = 60       # Initial delay in seconds after a rate limit error
+    delay = 20       # Initial delay in seconds after a rate limit error
     retry_attempts = 3  # Maximum retry attempts for each post
 
     for i in range(0, len(posts), batch_size):
