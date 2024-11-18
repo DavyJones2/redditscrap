@@ -10,10 +10,10 @@ workers = 3  # Adjust based on the number of available CPUs
 worker_class = "uvicorn.workers.UvicornWorker"
 
 # Set the timeout to handle long-running requests
-timeout = 300  # Increase timeout to 120 seconds
+timeout = 3000  # Increase timeout to 120 seconds
 
 # Graceful timeout for workers to complete tasks on shutdown
-graceful_timeout = 300
+graceful_timeout = 3000
 
 # Temporary directory for Gunicorn workers
 worker_tmp_dir = "/dev/shm"
