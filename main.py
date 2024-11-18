@@ -141,7 +141,7 @@ class ChatRequest(BaseModel):
 @app.post("/chatbot")
 async def chatbot_response(request: ChatRequest):
     print(request.keywords)
-    print(type(request.data_num))
+    print(request.data_num)
     try:
         # Extract posts from Reddit based on keywords and data number
         posts = extract(request.keywords, request.data_num)
