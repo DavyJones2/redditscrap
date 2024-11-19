@@ -124,9 +124,9 @@ async def general_stream(user_input):
                         is_dangerous = response['choices'][0]['message']['content'] == "Yes"
                         if is_dangerous:
                             list1.append(list(post))
-                            yield f"data: Dangerous post detected - URL: {url}\n\n"
+                            yield f"data: url: {url}\n"
                         else:
-                            yield f"data: Safe post - URL: {url}\n\n"
+                            pass
                         break  # Exit the retry loop if the request is successful
 
                     except openai.error.RateLimitError:
