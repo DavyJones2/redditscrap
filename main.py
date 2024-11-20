@@ -125,9 +125,9 @@ async def general_stream(user_input):
                         if is_dangerous:
                             list1.append(list(post))
                             print(f"data: url: {url}\n")
-                            yield f"data: url: {url}\n"
+                            yield f"data: url: {url}\n\n"
                         else:
-                            print(f"data: url: {url}\n")
+                            print(f"data: url: {url}\n\n")
                         break  # Exit the retry loop if the request is successful
 
                     except openai.error.RateLimitError:
