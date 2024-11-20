@@ -149,6 +149,7 @@ async def chatbot_response(request: ChatRequest):
     data_num = request.data_num
     print(f"Data: {data_num}")
     v = extract(keywords, data_num)
+    print(len(v))
     return StreamingResponse(
         general_stream("Please classify the post correctly", v),
         media_type="text/event-stream"
