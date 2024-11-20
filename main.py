@@ -123,9 +123,6 @@ async def general_stream(user_input, posts):
                         if is_dangerous:
                             print(f"data: url: {url}\n")
                             yield f"data: url: {url}\n"
-                        else:
-                            yield f"data: url: {url}\n"
-                            print(f"data: url: {url}\n\n")
                         break  # Exit the retry loop if the request is successful
 
                     except openai.error.RateLimitError:
@@ -145,6 +142,7 @@ async def general_stream(user_input, posts):
 @app.post("/chatbot")
 async def chatbot_response(request: ChatRequest):
     keywords = request.keywords
+    print(keywords)
     data_num = request.data_num
     print(f"Data: {data_num}")
     v = extract(keywords, data_num)
