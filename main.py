@@ -52,10 +52,10 @@ def truncate_text_to_token_limit(text, max_tokens=4000):
     max_characters = max_tokens * 4
     return text[:max_characters] if len(text) > max_characters else text
 
-posts = []
+
 def extract(keywords, dataNum):
+    posts = []
     print(f"received: {dataNum}")
-    global posts
     for keyword in keywords:
         for submission in subreddit.search(keyword, sort="new", limit=dataNum):
             try:
@@ -81,15 +81,14 @@ def extract(keywords, dataNum):
                     posts.append(post_info)
             except LangDetectException:
                 print("Could not detect language for this post. Skipping...")
-    return "finish"
+    return posts
 
 # Request and Response Models
 class ChatRequest(BaseModel):
     keywords: list
     data_num: int
 
-async def general_stream(user_input):
-    global posts
+async def general_stream(user_input, posts):
     n = 0
     batch_size = 5  # Define the batch size to control the number of requests per batch
     delay = 20       # Initial delay in seconds after a rate limit error
@@ -152,7 +151,7 @@ async def chatbot_response(request: ChatRequest):
     v = extract(keywords, data_num)
     print((len(posts)))
     return StreamingResponse(
-        general_stream("Please classify the post correctly"),
+        general_stream("Please classify the post correctly", v),
         media_type="text/event-stream"
     )
 
