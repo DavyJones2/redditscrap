@@ -91,8 +91,8 @@ class ChatRequest(BaseModel):
 async def general_stream(user_input):
     global posts
     n = 0
-    batch_size = 10  # Define the batch size to control the number of requests per batch
-    delay = 15       # Initial delay in seconds after a rate limit error
+    batch_size = 5  # Define the batch size to control the number of requests per batch
+    delay = 20       # Initial delay in seconds after a rate limit error
     retry_attempts = 3  # Maximum retry attempts for each post
 
     try:
@@ -126,6 +126,7 @@ async def general_stream(user_input):
                             print(f"data: url: {url}\n")
                             yield f"data: url: {url}\n\n"
                         else:
+                            yield f"data: url: {url}\n\n"
                             print(f"data: url: {url}\n\n")
                         break  # Exit the retry loop if the request is successful
 
