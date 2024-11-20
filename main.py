@@ -124,9 +124,10 @@ async def general_stream(user_input):
                         is_dangerous = response['choices'][0]['message']['content'] == "Yes"
                         if is_dangerous:
                             list1.append(list(post))
+                            print(f"data: url: {url}\n")
                             yield f"data: url: {url}\n"
                         else:
-                            pass
+                            print(f"data: url: {url}\n")
                         break  # Exit the retry loop if the request is successful
 
                     except openai.error.RateLimitError:
