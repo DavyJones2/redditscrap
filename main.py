@@ -93,7 +93,7 @@ async def general_stream(user_input):
     global posts
     n = 0
     batch_size = 10  # Define the batch size to control the number of requests per batch
-    delay = 60       # Initial delay in seconds after a rate limit error
+    delay = 15       # Initial delay in seconds after a rate limit error
     retry_attempts = 3  # Maximum retry attempts for each post
 
     try:
@@ -137,7 +137,7 @@ async def general_stream(user_input):
 
             # After each batch, add a delay to avoid rate limiting
             print("Batch completed, waiting before next batch...")
-            await asyncio.sleep(30)  # Modify this as needed based on your rate limits
+            await asyncio.sleep(5)  # Modify this as needed based on your rate limits
 
     except Exception as e:
         yield f"data: Error: {str(e)}\n\n"
