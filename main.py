@@ -123,6 +123,8 @@ async def general_stream(user_input, posts):
                         if is_dangerous:
                             print(f"data: url: {url}\n")
                             yield f"data: url: {url}\n"
+                        else:
+                            print(url)
                         break  # Exit the retry loop if the request is successful
 
                     except openai.error.RateLimitError:
