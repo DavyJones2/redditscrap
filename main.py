@@ -137,7 +137,7 @@ async def general_stream(user_input):
 
             # After each batch, add a delay to avoid rate limiting
             print("Batch completed, waiting before next batch...")
-            await asyncio.sleep(5)  # Modify this as needed based on your rate limits
+            await asyncio.sleep(20)  # Modify this as needed based on your rate limits
 
     except Exception as e:
         yield f"data: Error: {str(e)}\n\n"
@@ -148,6 +148,7 @@ async def general_stream(user_input):
 async def chatbot_response(request: ChatRequest):
     keywords = request.keywords
     data_num = request.data_num
+    print(f"Data: {data_num}")
     v = extract(keywords, data_num)
     print((len(posts)))
     return StreamingResponse(
