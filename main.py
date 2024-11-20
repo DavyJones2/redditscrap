@@ -124,7 +124,7 @@ async def general_stream(user_input):
                         is_dangerous = True
                         if is_dangerous:
                             print(f"data: url: {url}\n")
-                            yield f"data: url: {url}\n"
+                            yield f"data: url: {url}\n\n"
                         else:
                             print(f"data: url: {url}\n\n")
                         break  # Exit the retry loop if the request is successful
@@ -142,98 +142,20 @@ async def general_stream(user_input):
         yield f"data: Error: {str(e)}\n\n"
 
 
-# Define the API endpoint
-# @app.post("/chatbot")
-# async def chatbot_response(request: ChatRequest):
-#     keywords = request.keywords
-#     data_num = request.data_num
-#     print(f"Data: {data_num}")
-#     v = extract(keywords, data_num)
-#     print((len(posts)))
-#     return StreamingResponse(
-#         general_stream("Please classify the post correctly"),
-#         media_type="text/event-stream"
-#     )
+ # Define the API endpoint
+ @app.post("/chatbot")
+ async def chatbot_response(request: ChatRequest):
+     keywords = request.keywords
+     data_num = request.data_num
+     print(f"Data: {data_num}")
+     v = extract(keywords, data_num)
+     print((len(posts)))
+     return StreamingResponse(
+         general_stream("Please classify the post correctly"),
+         media_type="text/event-stream"
+     )
 
 
 
-async def general_stream_json(user_input):
-    global posts
-    n = 0
-    batch_size = 10  # Define the batch size
-    delay = 15       # Initial delay in seconds after a rate limit error
-    retry_attempts = 3  # Maximum retry attempts for each post
-
-    try:
-        for i in range(0, len(posts), batch_size):
-            batch = posts[i:i + batch_size]
-            for post in batch:
-                title, url, truncated_body = post
-                system_message = f"""
-                Post text: {truncated_body}
-
-                You are an AI assistant that evaluates text content. Your task is to determine if the given text discusses 
-                any aspect of AI that might be dangerous or have a negative impact on humanity in the future.
-                Respond with only "Yes" if the content is potentially dangerous or harmful, otherwise respond with "No".
-                """
-                n += 1
-                print(f"Processing post {n}")
-
-                attempt = 0
-                while attempt < retry_attempts:
-                    try:
-                        # Uncomment and use this block for real OpenAI requests:
-                        # response = openai.ChatCompletion.create(
-                        #     model="gpt-4",
-                        #     messages=[
-                        #         {"role": "system", "content": system_message},
-                        #         {"role": "user", "content": user_input}
-                        #     ]
-                        # )
-                        # is_dangerous = response['choices'][0]['message']['content'] == "Yes"
-
-                        is_dangerous = True  # Simulating the response for testing
-                        yield {
-                            "index": n,
-                            "title": title,
-                            "url": url,
-                            "dangerous": is_dangerous
-                        }
-                        break  # Exit retry loop if the request is successful
-
-                    except openai.error.RateLimitError:
-                        attempt += 1
-                        print(f"Rate limit exceeded, attempt {attempt}. Waiting before retrying...")
-                        await asyncio.sleep(delay * (2 ** attempt))  # Exponential backoff
-
-            # After processing a batch, add a delay to avoid rate limiting
-            print("Batch completed, waiting before next batch...")
-            await asyncio.sleep(20)  # Adjust as needed for your rate limits
-
-    except Exception as e:
-        yield {"error": str(e)}
-
-
-
-import json
-
-@app.post("/chatbot")
-async def chatbot_response(request: ChatRequest):
-    keywords = request.keywords
-    data_num = request.data_num
-    print(f"Data: {data_num}")
-    extract(keywords, data_num)  # Populate the global `posts` list
-    print(f"Number of posts extracted: {len(posts)}")
-
-    async def json_stream():
-        async for data in general_stream_json("Please classify the post correctly"):
-            yield json.dumps(data) + "\n"  # Serialize JSON and add newline
-            await asyncio.sleep(0.01)  # Small delay to ensure flush
-
-    return StreamingResponse(
-        json_stream(),
-        media_type="application/json",
-        headers={"X-Accel-Buffering": "no"}  # Disable buffering (for some reverse proxies like NGINX)
-    )
 
 
