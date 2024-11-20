@@ -227,8 +227,13 @@ async def chatbot_response(request: ChatRequest):
 
     async def json_stream():
         async for data in general_stream_json("Please classify the post correctly"):
-            yield f"{json.dumps(data)}\n"  # Serialize JSON and add newline
+            yield json.dumps(data) + "\n"  # Serialize JSON and add newline
+            await asyncio.sleep(0.01)  # Small delay to ensure flush
 
-    # StreamingResponse streams JSON chunks as they are yielded
-    return StreamingResponse(json_stream(), media_type="application/json")
+    return StreamingResponse(
+        json_stream(),
+        media_type="application/json",
+        headers={"X-Accel-Buffering": "no"}  # Disable buffering (for some reverse proxies like NGINX)
+    )
+
 
