@@ -143,7 +143,7 @@ async def general_stream(user_input):
 
 
  # Define the API endpoint
- @app.post("/chatbot")
+@app.post("/chatbot")
 async def chatbot_response(request: ChatRequest):
     keywords = request.keywords
     data_num = request.data_num
