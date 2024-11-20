@@ -160,7 +160,7 @@ async def general_stream(user_input):
 async def general_stream_json(user_input):
     global posts
     n = 0
-    batch_size = 10  # Define the batch size to control the number of requests per batch
+    batch_size = 10  # Define the batch size
     delay = 15       # Initial delay in seconds after a rate limit error
     retry_attempts = 3  # Maximum retry attempts for each post
 
@@ -182,7 +182,7 @@ async def general_stream_json(user_input):
                 attempt = 0
                 while attempt < retry_attempts:
                     try:
-                        # Uncomment and use the following block for real OpenAI requests:
+                        # Uncomment and use this block for real OpenAI requests:
                         # response = openai.ChatCompletion.create(
                         #     model="gpt-4",
                         #     messages=[
@@ -191,24 +191,24 @@ async def general_stream_json(user_input):
                         #     ]
                         # )
                         # is_dangerous = response['choices'][0]['message']['content'] == "Yes"
-                        
+
                         is_dangerous = True  # Simulating the response for testing
-                        if is_dangerous:
-                            print(f"data: url: {url}\n")
-                            yield {"index": n, "title": title, "url": url, "dangerous": True}
-                        else:
-                            print(f"data: url: {url}\n\n")
-                            yield {"index": n, "title": title, "url": url, "dangerous": False}
-                        break  # Exit the retry loop if the request is successful
+                        yield {
+                            "index": n,
+                            "title": title,
+                            "url": url,
+                            "dangerous": is_dangerous
+                        }
+                        break  # Exit retry loop if the request is successful
 
                     except openai.error.RateLimitError:
                         attempt += 1
                         print(f"Rate limit exceeded, attempt {attempt}. Waiting before retrying...")
                         await asyncio.sleep(delay * (2 ** attempt))  # Exponential backoff
 
-            # After each batch, add a delay to avoid rate limiting
+            # After processing a batch, add a delay to avoid rate limiting
             print("Batch completed, waiting before next batch...")
-            await asyncio.sleep(20)  # Modify this as needed based on your rate limits
+            await asyncio.sleep(20)  # Adjust as needed for your rate limits
 
     except Exception as e:
         yield {"error": str(e)}
@@ -222,11 +222,13 @@ async def chatbot_response(request: ChatRequest):
     keywords = request.keywords
     data_num = request.data_num
     print(f"Data: {data_num}")
-    extract(keywords, data_num)
+    extract(keywords, data_num)  # Populate the global `posts` list
     print(f"Number of posts extracted: {len(posts)}")
 
     async def json_stream():
         async for data in general_stream_json("Please classify the post correctly"):
-            yield json.dumps(data) + "\n"  # Serialize JSON object and add newline
+            yield f"{json.dumps(data)}\n"  # Serialize JSON and add newline
 
+    # StreamingResponse streams JSON chunks as they are yielded
     return StreamingResponse(json_stream(), media_type="application/json")
+
