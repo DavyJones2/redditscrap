@@ -112,15 +112,14 @@ async def general_stream(user_input, posts):
                 attempt = 0
                 while attempt < retry_attempts:
                     try:
-                        # response = openai.ChatCompletion.create(
-                        #     model="gpt-4",
-                        #     messages=[
-                        #         {"role": "system", "content": system_message},
-                        #         {"role": "user", "content": user_input}
-                        #     ]
-                        # )
-                        # is_dangerous = response['choices'][0]['message']['content'] == "Yes"
-                        is_dangerous = True
+                        response = openai.ChatCompletion.create(
+                            model="gpt-4",
+                            messages=[
+                                {"role": "system", "content": system_message},
+                                {"role": "user", "content": user_input}
+                            ]
+                        )
+                        is_dangerous = response['choices'][0]['message']['content'] == "Yes"
                         if is_dangerous:
                             print(f"data: url: {url}\n")
                             yield f"data: url: {url}\n"
