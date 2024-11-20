@@ -123,9 +123,9 @@ async def general_stream(user_input, posts):
                         is_dangerous = True
                         if is_dangerous:
                             print(f"data: url: {url}\n")
-                            yield f"data: url: {url}\n\n"
+                            yield f"data: url: {url}\n"
                         else:
-                            yield f"data: url: {url}\n\n"
+                            yield f"data: url: {url}\n"
                             print(f"data: url: {url}\n\n")
                         break  # Exit the retry loop if the request is successful
 
