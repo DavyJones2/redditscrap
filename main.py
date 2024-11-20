@@ -54,6 +54,7 @@ def truncate_text_to_token_limit(text, max_tokens=4000):
 
 posts = []
 def extract(keywords, dataNum):
+    print(f"received: {dataNum}")
     global posts
     for keyword in keywords:
         for submission in subreddit.search(keyword, sort="new", limit=dataNum):
@@ -87,9 +88,7 @@ class ChatRequest(BaseModel):
     keywords: list
     data_num: int
 
-list1 = []
 async def general_stream(user_input):
-    global list1
     global posts
     n = 0
     batch_size = 10  # Define the batch size to control the number of requests per batch
@@ -124,7 +123,6 @@ async def general_stream(user_input):
                         # is_dangerous = response['choices'][0]['message']['content'] == "Yes"
                         is_dangerous = True
                         if is_dangerous:
-                            list1.append(list(post))
                             print(f"data: url: {url}\n")
                             yield f"data: url: {url}\n\n"
                         else:
