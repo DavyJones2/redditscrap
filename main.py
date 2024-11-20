@@ -144,16 +144,16 @@ async def general_stream(user_input):
 
  # Define the API endpoint
  @app.post("/chatbot")
- async def chatbot_response(request: ChatRequest):
-     keywords = request.keywords
-     data_num = request.data_num
-     print(f"Data: {data_num}")
-     v = extract(keywords, data_num)
-     print((len(posts)))
-     return StreamingResponse(
-         general_stream("Please classify the post correctly"),
-         media_type="text/event-stream"
-     )
+async def chatbot_response(request: ChatRequest):
+    keywords = request.keywords
+    data_num = request.data_num
+    print(f"Data: {data_num}")
+    v = extract(keywords, data_num)
+    print((len(posts)))
+    return StreamingResponse(
+        general_stream("Please classify the post correctly"),
+        media_type="text/event-stream"
+    )
 
 
 
